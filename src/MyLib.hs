@@ -2,6 +2,8 @@ module MyLib (interactiveLines) where
 
 import Data.Char
 
+data PadMode = PadLeft | PadRight | PadCenter
+
 type NumberedLine = (Maybe Int, String)
 
 type NumberedLines = [NumberedLine]
@@ -37,6 +39,25 @@ numberAllLines = numberLines (const True) (const True)
 numberNonEmptyLines :: [String] -> NumberedLines
 numberNonEmptyLines = numberLines (const True) isNotEmpty
 
-
 numberAndIncrementNonEmptyLines :: [String] -> NumberedLines
 numberAndIncrementNonEmptyLines = numberLines isNotEmpty isNotEmpty
+
+pad :: PadMode -> Int -> String -> String
+pad mode n str =
+  case mode of
+    PadLeft -> padding ++ str
+    PadRight -> str ++ padding
+    PadCenter -> centerPadding ++ str ++ centerPadding
+    where
+      centerPadding = replicate (diff `div` 2) ' '
+      diff = n - length str
+      padding = replicate diff ' '
+
+padLeft :: Int -> String -> String
+padLeft = pad PadLeft
+
+padRight :: Int -> String -> String
+padRight = pad PadRight
+
+padCenter:: Int -> String -> String
+padCenter = pad PadCenter
