@@ -1,4 +1,4 @@
-module MyLib (interactiveLines) where
+module MyLib (numberAllLines, numberNonEmptyLines, prettyNumberedLines, PadMode (..)) where
 
 import Data.Char
 
@@ -48,10 +48,10 @@ pad mode n str =
     PadLeft -> padding ++ str
     PadRight -> str ++ padding
     PadCenter -> centerPadding ++ str ++ centerPadding
-    where
-      centerPadding = replicate (diff `div` 2) ' '
-      diff = n - length str
-      padding = replicate diff ' '
+  where
+    centerPadding = replicate (diff `div` 2) ' '
+    diff = n - length str
+    padding = replicate diff ' '
 
 padLeft :: Int -> String -> String
 padLeft = pad PadLeft
@@ -59,5 +59,13 @@ padLeft = pad PadLeft
 padRight :: Int -> String -> String
 padRight = pad PadRight
 
-padCenter:: Int -> String -> String
+padCenter :: Int -> String -> String
 padCenter = pad PadCenter
+
+prettyNumberedLines :: PadMode -> NumberedLines -> [String]
+prettyNumberedLines mode lineNums =
+  let (numbers, lines) = unzip lineNums
+      numberStrings = map (maybe "" show) numbers
+      maxLength = maximum (map length numberStrings)
+      paddedNumbers = map (pad mode maxLength) numberStrings
+   in zipWith (\n l -> n ++ " " ++ l) paddedNumbers lines
