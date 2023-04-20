@@ -39,8 +39,6 @@ numberAllLines = numberLines (const True) (const True)
 numberNonEmptyLines :: [String] -> NumberedLines
 numberNonEmptyLines = numberLines (const True) isNotEmpty
 
-numberAndIncrementNonEmptyLines :: [String] -> NumberedLines
-numberAndIncrementNonEmptyLines = numberLines isNotEmpty isNotEmpty
 
 pad :: PadMode -> Int -> String -> String
 pad mode n str =
